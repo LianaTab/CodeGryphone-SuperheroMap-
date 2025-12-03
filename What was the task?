@@ -1,0 +1,55 @@
+Create a mobile application and website based on the information below:
+
+Name: SuperheroMap
+Languages: Russian, English
+
+A mobile application called SuperheroMap needs to be created for various platforms with the following functionality:
+
+0. User Authorization
+Can be performed in any convenient way: via phone number, email, or Apple ID. It is essential that users do not lose their personal settings when switching devices.
+
+1. News
+A news feed on specific topics.
+During app registration, the user selects topics of interest from the list:
+- Manufacturing
+- Retail
+- Service provision
+- Finance
+- Consulting
+Or manually enters keywords (no more than three).
+
+Based on the selected topics, a news feed on subjects interesting to the user must be formed within the app. Information is taken from the top 10 news websites for the chosen topic, updated once a day at 6 AM according to the user's local time. Display format: article title and the first lines of the article. Clicking on the title redirects to the full article on the source publication's website. No more than 50 articles total, ranked by the frequency of mentions of a particular news item.
+
+2. Tasks
+A task manager where users can maintain to-do lists, set reminders, create recurring tasks that duplicate daily/weekly/monthly/yearly. There are list categories: day/week/month/year. The user chooses which type of list they are creating. The user marks completed tasks and can reschedule a specific task to another day or period.
+
+If a user assigns a day and time period to a task, it is automatically added to the calendar.
+Tasks can be prioritized using a traffic light system (red, yellow, green). Priority is displayed as a circle of the corresponding color next to the task.
+
+3. Calendar
+Contains all tasks for which the user has specified a day and time or a time period.
+Also has several calendar views: day/week/month.
+If a task has a priority (red, yellow, green), that task is highlighted in the calendar with the corresponding color fill.
+
+4. Focus
+This section aggregates audio with meditations and affirmations from open sources. Short format, no longer than 7 minutes. The section is formed similarly to the news feed, displaying the name of the audio recording. Clicking on it redirects the user to the website where the audio or video recording is posted.
+
+5. Sport
+This section aggregates videos with short workouts that can be done at the workplace, at home, or while driving. Videos no longer than 10 minutes. The main requirement is no need for special equipment. The section is formed similarly to the News feed and the Focus section, displaying the name of the video recording. Clicking on it redirects the user to the website where the video recording is posted.
+
+6. Questions
+The section contains a dialog box with a built-in free AI that can answer the user's basic questions.
+
+App Design
+Calm design, light background (#FFF8DC or other), a few basic colors, no flashy elements.
+The main work area is displayed as a menu with sections on the left side, section content on the right (1/3 of the screen), and the functionality area on the left side (2/3 of the screen).
+
+Section and Subsection Names:
+News
+Tasks (subsections Day, Month, Year appear only if the user selected the corresponding setting when adding a task to the list)
+Calendar (subsections Day, Month, Year appear only if the user selected the corresponding setting when adding a task to the list)
+Focus
+Sport
+Questions
+
+If you believe it is necessary to add anything else to the description or if you have suggestions on how to improve or refine the project architecture — please do so.
