@@ -1,0 +1,118 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: superheromap-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-superhero}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-superhero}
+      POSTGRES_DB: ${POSTGRES_DB:-superhero}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-superhero}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - superheromap
+
+  redis:
+    image: redis:7-alpine
+    container_name: superheromap-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - superheromap
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+      target: development
+    container_name: superheromap-backend
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    command: sh -c "pnpm install && pnpm --filter backend dev"
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - pnpm-store:/pnpm/store
+    networks:
+      - superheromap
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: development
+    container_name: superheromap-web
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://backend:${BACKEND_PORT:-3000}
+    command: sh -c "pnpm install && pnpm --filter web dev"
+    ports:
+      - "${WEB_PORT:-3001}:3001"
+    depends_on:
+      backend:
+        condition: service_started
+    volumes:
+      - .:/app
+      - pnpm-store:/pnpm/store
+    networks:
+      - superheromap
+
+  mobile:
+    build:
+      context: .
+      dockerfile: apps/mobile/Dockerfile
+      target: development
+    container_name: superheromap-mobile
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      EXPO_USE_DEV_SERVER: "true"
+    command: sh -c "pnpm install && pnpm --filter mobile start"
+    ports:
+      - "${MOBILE_PORT:-3002}:3002"
+    depends_on:
+      backend:
+        condition: service_started
+    volumes:
+      - .:/app
+      - pnpm-store:/pnpm/store
+    networks:
+      - superheromap
+
+networks:
+  superheromap:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pnpm-store:
